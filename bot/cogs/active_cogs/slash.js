@@ -11,8 +11,8 @@ module.exports = {
                 const timeTaken = Date.now() - sent;
                 await Interaction.editReply({ content: `:ping_pong: Pong! \nLatency ${timeTaken}ms.` });
             }
-            if (Interaction.commandName === 'test') {
-                await Interaction.reply({content:'Test Successful!'});
+            if (Interaction.commandName === 'help') {
+                await Interaction.reply({content:'Help'});
             }
         });
     }
