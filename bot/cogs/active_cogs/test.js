@@ -17,11 +17,11 @@ module.exports = {
       if (command === 'test') {
         const embed = new EmbedBuilder()
           .setTitle('Test was successful!')
-          .setDescription('This is a successful test.')
+          // .setDescription('The test was ran successfully.')
           .setColor("Random")
           // .setImage('https://i.giphy.com/HZrx8kjIA7lyeTqXVM.webp')
           .setTimestamp()
-          .setFooter({text :`Ran by: ${message.author.displayName}`, iconURL: message.author.avatarURL() })
+          // .setFooter({text :`Ran by: ${message.author.displayName}`, iconURL: message.author.avatarURL() })
           .setThumbnail('https://media.tenor.com/REoBdf2ztLEAAAAj/check-mark-good.gif')
           .setAuthor({name: 'Mauimatic' , iconURL: client.user.avatarURL()});
         message.reply({embeds: [embed]});

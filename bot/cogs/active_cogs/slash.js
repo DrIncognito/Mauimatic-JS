@@ -6,7 +6,10 @@ module.exports = {
             if (!Interaction.isChatInputCommand()) return;
 
             if (Interaction.commandName === 'ping') {
-                await Interaction.reply({content:'Pong!'});
+                const sent = Date.now();
+                await Interaction.reply({ content: 'Pong!' });
+                const timeTaken = Date.now() - sent;
+                await Interaction.editReply({ content: `:ping_pong: Pong! \nLatency ${timeTaken}ms.` });
             }
             if (Interaction.commandName === 'test') {
                 await Interaction.reply({content:'Test Successful!'});
