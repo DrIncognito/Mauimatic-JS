@@ -5,7 +5,7 @@ module.exports = {
   setup(client) {
     client.on('messageCreate', async message => {
       if (message.author.bot) return;
-      if (['heyo', 'hello', 'hi', 'hey'].includes(message.content.toLowerCase())) {
+      if (['heyo', 'hello', 'hi', 'hey', 'yo'].includes(message.content.toLowerCase())) {
         message.reply(`Hello, ${message.author}!`);
       }
         // Check if the message starts with the prefix
