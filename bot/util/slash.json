@@ -1,0 +1,11 @@
+
+[
+    {
+        "name": "test",
+        "description": "A test command"
+    },
+    {
+        "name": "ping",
+        "description": "A ping command"
+    }
+]

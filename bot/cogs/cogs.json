@@ -1,0 +1,4 @@
+{
+    "active": ["greet", "math"],
+    "inactive": ["weather"]
+  }
