@@ -1,5 +1,4 @@
 const { Client, GatewayIntentBits} = require('discord.js');
-require('dotenv').config(); // For your bot token stored in .env file
 const fsp = require('fs').promises;
 const fs = require('fs');
 
@@ -17,6 +16,11 @@ const fs = require('fs');
       GatewayIntentBits.GuildEmojisAndStickers,
     ] 
   });
+
+  // Import and run the initialize script
+  const createEnvFile = require('./util/env_maker.js');
+  await createEnvFile();
+  require('dotenv').config({ path: './util/data/.env' }); // For your bot token stored in .env file
 
 // Event handler for when the bot is ready
 client.once('ready', async () => {
