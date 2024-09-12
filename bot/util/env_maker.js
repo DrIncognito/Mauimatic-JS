@@ -18,8 +18,9 @@ const createEnvFile = async () => {
     const botToken = await askQuestion('Enter BOT_TOKEN: ');
     const discordPrefix = await askQuestion('Enter DISCORD_PREFIX: ');
     const welcomeChannel = await askQuestion('Enter WELCOME_CHANNEL: ');
+    const launchChannel = await askQuestion('Enter BOT_LAUNCH_CHANNEL: ');
 
-    const envContent = `BOT_TOKEN=${botToken}\nDISCORD_PREFIX=${discordPrefix}\nWELCOME_CHANNEL=${welcomeChannel}\n`;
+    const envContent = `BOT_TOKEN=${botToken}\nDISCORD_PREFIX=${discordPrefix}\nWELCOME_CHANNEL=${welcomeChannel}\nBOT_LAUNCH_CHANNEL_ID=${launchChannel}\n`;
 
     fs.writeFileSync(path, envContent, 'utf8');
     console.log('.env file created successfully.');

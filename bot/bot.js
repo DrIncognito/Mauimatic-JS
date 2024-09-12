@@ -1,4 +1,5 @@
-const { Client, GatewayIntentBits} = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+require('dotenv').config({ path: './util/data/.env' }); // Specify the path to your .env file
 const fsp = require('fs').promises;
 const fs = require('fs');
 
@@ -17,45 +18,85 @@ const fs = require('fs');
     ] 
   });
 
+  // Function to send log messages to the specified channel
+  const sendLogMessage = async (embed) => {
+    const launchChannelId = process.env.BOT_LAUNCH_CHANNEL_ID;
+    try {
+      const launchChannel = await client.channels.fetch(launchChannelId);
+      if (launchChannel) {
+        await launchChannel.send({ embeds: [embed] });
+      } else {
+        console.error(`Channel with ID ${launchChannelId} not found`);
+      }
+    } catch (error) {
+      console.error(`Error fetching channel with ID ${launchChannelId}:`, error);
+    }
+  };
+
   // Import and run the initialize script
   const createEnvFile = require('./util/env_maker.js');
   await createEnvFile();
-  require('dotenv').config({ path: './util/data/.env' }); // For your bot token stored in .env file
 
-// Event handler for when the bot is ready
-client.once('ready', async () => {
-  console.log(chalk.yellow(`|--- Registering Slash Commands ---`));
-  const data = await fsp.readFile('./util/slash.json');
-  const commands = JSON.parse(data); // Parse the JSON string into an object
-  for(const command of commands) {
+  // Event handler for when the bot is ready
+  client.once('ready', async () => {
+    const logMessages = [];
+
+    const launchChannelId = process.env.BOT_LAUNCH_CHANNEL_ID;
+    let launchChannelName = 'Unknown';
     try {
-      const registerCommand = await client.application.commands.create(command);
-      console.log(chalk.green(`|Successfully registered command ${registerCommand.name}`));
-    }catch(error) {
-      console.error(error);
+      const launchChannel = await client.channels.fetch(launchChannelId);
+      if (launchChannel) {
+        launchChannelName = launchChannel.name;
+      }
+    } catch (error) {
+      console.error(`Error fetching channel with ID ${launchChannelId}:`, error);
     }
-  }
-  console.log(chalk.blueBright(`|--- End Registering Slash Commands ---\n`));
 
-  console.log(chalk.cyan(`|--- Bot Info ---`));
-  console.log(chalk.cyan(`|Logged in as ${client.user.tag}`));
-  console.log(chalk.cyan(`|Prefix: ${process.env.DISCORD_PREFIX}`));
-  console.log(chalk.cyan(`|--- Bot is Live ---`));
-});
+    logMessages.push({ name: 'Bot Info', value: `Logged in as ${client.user.tag}` });
+    logMessages.push({ name: 'Prefix', value: process.env.DISCORD_PREFIX });
+    logMessages.push({ name: 'User Welcome Channel', value: process.env.WELCOME_CHANNEL });
+    logMessages.push({ name: 'Bot Launch Channel', value: `${launchChannelName}` });
+    logMessages.push({ name: 'Status', value: 'Bot is Live' });
 
-const cogsFolder = './cogs/active_cogs';
-const cogsFile = fs.readdirSync(cogsFolder).filter(file => file.endsWith('.js'));
-console.log(chalk.yellow(`|--- Initializing Cogs  ---`));
-for (const file of cogsFile) {  
-  const cog = require(`${cogsFolder}/${file}`);
-  try {
-    cog.setup(client);
-    console.log(chalk.green(`|✓ ${file.slice(0, -3)}`));
-  } catch (error) { 
-    console.error(chalk.red(`|× ${file.slice(0, -3)}: \nerr -> ${error}`));
-  } 
-}
-console.log(chalk.blueBright(`|--- End Init Cogs  ---\n`));
+    let slashCommandResults = '';
+    const data = await fsp.readFile('./util/slash.json');
+    const commands = JSON.parse(data); // Parse the JSON string into an object
+    for (const command of commands) {
+      try {
+        const registerCommand = await client.application.commands.create(command);
+        slashCommandResults += `✓ ${registerCommand.name}\n`;
+      } catch (error) {
+        console.error(error);
+        slashCommandResults += `× ${command.name}: ${error.message}\n`;
+      }
+    }
+    logMessages.push({ name: 'Slash Commands', value: slashCommandResults });
 
-client.login(process.env.BOT_TOKEN);
+    let cogInitializationResults = '';
+    const cogsFolder = './cogs/active_cogs';
+    const cogsFile = fs.readdirSync(cogsFolder).filter(file => file.endsWith('.js'));
+    for (const file of cogsFile) {  
+      const cog = require(`${cogsFolder}/${file}`);
+      try {
+        cog.setup(client);
+        cogInitializationResults += `✓ ${file.slice(0, -3)}\n`;
+      } catch (error) { 
+        console.error(error);
+        cogInitializationResults += `× ${file.slice(0, -3)}: ${error.message}\n`;
+      } 
+    }
+    logMessages.push({ name: 'Cogs Initialization', value: cogInitializationResults });
+
+    // Create and send the embed
+    const embed = new EmbedBuilder()
+      .setColor('#0099ff')
+      .setTitle('Bot Initialization Log')
+      .setThumbnail("https://images-ext-2.discordapp.net/external/5aGsHd5C15CRF2WkGQYYg7uQs9evv-g5FnQSg3Tmyaw/http/smashinghub.com/wp-content/uploads/2014/08/cool-loading-animated-gif-8.gif")
+      .addFields(logMessages)
+      .setTimestamp();
+
+    await sendLogMessage(embed);
+  });
+
+  client.login(process.env.BOT_TOKEN);
 })();
