@@ -1,6 +1,10 @@
 const { Events, MessageEmbed, EmbedBuilder } = require('discord.js');
 
 module.exports = {
+    name: 'Server Stats',
+    description: 'Displays an embed of server statistics.',
+    usage: '[command name]',
+    category: 'Utility',
     setup(client) {
         client.on('messageCreate', async message => {
             if (message.author.bot) return;

@@ -2,6 +2,10 @@ const { EmbedBuilder } = require('discord.js');
 const prefix = process.env.DISCORD_PREFIX;
 
 module.exports = {
+  name: 'test', // Command name
+  description: 'This is a test command to check functionality.', // Command description
+  usage: '', // Any arguments or options the command uses
+  category: 'Utility', // Command category
   setup(client) {
     client.on('messageCreate', async message => {
       if (message.author.bot) return;

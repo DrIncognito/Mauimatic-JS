@@ -6,6 +6,10 @@ const prefix = process.env.DISCORD_PREFIX;
 const serverStats = {};
 
 module.exports = {
+  name: 'Server Health',
+  description: 'Displays a embed of server health statistics. With Graphical Reports.',
+  usage: '[command name]',
+  category: 'Utility',
   setup(client) {
     client.on('messageCreate', async message => {
       if (message.author.bot) return;

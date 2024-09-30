@@ -2,6 +2,10 @@ const { EmbedBuilder } = require('discord.js');
 const WELCOME_CHANNEL = process.env.WELCOME_CHANNEL
 
 module.exports = {
+  name: 'Welcome',
+  description: 'Displays a welcome message and assigns a default role to new members.',
+  usage: '[command name]',
+  category: 'Utility',
   setup(client) {
     client.on('guildMemberAdd', async member => {
       // Send a welcome message

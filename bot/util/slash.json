@@ -5,7 +5,11 @@
         "description": "A basic ping command"
     },
     {
-        "name": "invite",
+        "name": "bot_invite",
         "description": "A custom command to get bot invite link"
+    },
+    {
+        "name": "server_invite",
+        "description": "A custom command to get server invite link"
     }
 ]
