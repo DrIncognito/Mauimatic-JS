@@ -1,11 +1,11 @@
 
 [
     {
-        "name": "test",
-        "description": "A test command"
+        "name": "ping",
+        "description": "A basic ping command"
     },
     {
-        "name": "ping",
-        "description": "A ping command"
+        "name": "invite",
+        "description": "A custom command to get bot invite link"
     }
 ]

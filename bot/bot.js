@@ -54,9 +54,8 @@ const fs = require('fs');
 
     logMessages.push({ name: 'Bot Info', value: `Logged in as ${client.user.tag}` });
     logMessages.push({ name: 'Prefix', value: process.env.DISCORD_PREFIX });
-    logMessages.push({ name: 'User Welcome Channel', value: process.env.WELCOME_CHANNEL });
-    logMessages.push({ name: 'Bot Launch Channel', value: `${launchChannelName}` });
-    logMessages.push({ name: 'Status', value: 'Bot is Live' });
+    logMessages.push({ name: 'User Welcome Channel', value: `#${process.env.WELCOME_CHANNEL}` });
+    logMessages.push({ name: 'Bot Launch Channel', value: `#${launchChannelName}` });
 
     let slashCommandResults = '';
     const data = await fsp.readFile('./util/slash.json');
