@@ -18,6 +18,11 @@ const fs = require('fs');
     ] 
   });
 
+  // Initialize an empty array for commands
+  const commands = []; 
+  const cogsManager = require('./cogs/cogs_manager.js'); // Ensure correct path
+  cogsManager.setup(client, commands); // Pass the commands array to the setup
+
   // Function to send log messages to the specified channel
   const sendLogMessage = async (embed) => {
     const launchChannelId = process.env.BOT_LAUNCH_CHANNEL_ID;
@@ -59,8 +64,8 @@ const fs = require('fs');
 
     let slashCommandResults = '';
     const data = await fsp.readFile('./util/slash.json');
-    const commands = JSON.parse(data); // Parse the JSON string into an object
-    for (const command of commands) {
+    const commandsData = JSON.parse(data); // Parse the JSON string into an object
+    for (const command of commandsData) {
       try {
         const registerCommand = await client.application.commands.create(command);
         slashCommandResults += `✓ ${registerCommand.name}\n`;
@@ -72,18 +77,23 @@ const fs = require('fs');
     logMessages.push({ name: 'Slash Commands', value: slashCommandResults });
 
     let cogInitializationResults = '';
+    
+    // Load cogs from the 'active_cogs' folder
     const cogsFolder = './cogs/active_cogs';
-    const cogsFile = fs.readdirSync(cogsFolder).filter(file => file.endsWith('.js'));
-    for (const file of cogsFile) {  
+    const cogsFiles = fs.readdirSync(cogsFolder).filter(file => file.endsWith('.js'));
+
+    for (const file of cogsFiles) {
       const cog = require(`${cogsFolder}/${file}`);
       try {
-        cog.setup(client);
+        cog.setup(client); // Call the setup method
         cogInitializationResults += `✓ ${file.slice(0, -3)}\n`;
-      } catch (error) { 
+      } catch (error) {
         console.error(error);
         cogInitializationResults += `× ${file.slice(0, -3)}: ${error.message}\n`;
-      } 
+      }
     }
+
+    // Log cogs initialization results
     logMessages.push({ name: 'Cogs Initialization', value: cogInitializationResults });
 
     // Create and send the embed

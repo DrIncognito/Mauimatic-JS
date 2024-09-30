@@ -1,10 +1,6 @@
 const { Events } = require('discord.js');
 
 module.exports = {
-    name: 'Slash Commands',
-    description: 'Various slash commands for the bot.',
-    usage: '[command name]',
-    category: 'Utility',
     setup (client) {
         client.on(Events.InteractionCreate, async Interaction => {
             if (!Interaction.isChatInputCommand()) return;
